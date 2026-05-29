@@ -1,0 +1,21 @@
+{
+  "name": "🌟 我的自定义源",
+  "sites": [
+    {
+      "name": "360资源",
+      "type": 1,
+      "api": "https://360zy.com/api.php/provide/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "name": "另一个资源站",
+      "type": 1,
+      "api": "https://你的资源站/api.php/provide/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    }
+  ]
+}
