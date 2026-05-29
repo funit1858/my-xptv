@@ -1,18 +1,58 @@
 {
-  "name": "🌟 我的自定义源",
+  "name": "替代源 - 2026最新",
   "sites": [
     {
-      "name": "360资源",
-      "type": 1,
-      "api": "https://360zy.com/api.php/provide/vod/",
+      "name": "泥巴影院（强烈推荐）",
+      "type": 0,
+      "api": "https://www.nbyy.cc/api.php/provide/vod/",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1
     },
     {
-      "name": "另一个资源站",
-      "type": 1,
-      "api": "https://你的资源站/api.php/provide/vod/",
+      "name": "欧乐影院",
+      "type": 0,
+      "api": "https://www.ole-sport.com/api.php/provide/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "name": "低端影视",
+      "type": 0,
+      "api": "https://didrang.com/api.php/provide/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "name": "NO视频（纯净）",
+      "type": 0,
+      "api": "https://www.novipnoad.net/api.php/provide/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "name": "泥视频",
+      "type": 0,
+      "api": "https://www.nivod.vip/api.php/provide/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "name": "音范丝",
+      "type": 0,
+      "api": "https://www.yinfans.cc/api.php/provide/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "name": "PPnix 纯净",
+      "type": 0,
+      "api": "https://www.ppnix.com/api.php/provide/vod/",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1
