@@ -1,0 +1,15 @@
+{
+  "name": "LIBVIO 单独源",
+  "sites": [
+    {
+      "key": "libvio_site",
+      "name": "LIBVIO影视 (JS扩展)",
+      "type": 3,
+      "api": "csp_libvio",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": "https://raw.githubusercontent.com/funit1858/my-xptv/main/libvio.js"
+    }
+  ]
+}
