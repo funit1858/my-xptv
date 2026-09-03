@@ -2,6 +2,16 @@
   "name": "替代源 - 2026最新",
   "sites": [
     {
+      "key": "libvio_site",
+      "name": "LIBVIO影视 (JS扩展)",
+      "type": 3,
+      "api": "csp_libvio",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": "https://raw.githubusercontent.com/funit1858/my-xptv/main/libvio.js"
+    },
+    {
       "name": "泥巴影院（强烈推荐）",
       "type": 0,
       "api": "https://www.nbyy.cc/api.php/provide/vod/",
