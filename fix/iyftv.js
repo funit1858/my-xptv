@@ -54,18 +54,19 @@ let appConfig = {
 }
 
 async function getConfig() {
-    await updateKeys()
+    // 修复: getConfig 决不因 keys 获取失败而抛错 (否则 XPTV 无法显示该站)
+    try {
+        await updateKeys()
+    } catch (e) {
+        // keys 拿不到也不影响站点显示, 延迟到 getCards 再取
+    }
     return jsonify(appConfig)
 }
 
 async function getCards(ext) {
     ext = argsify(ext)
-    let keys = $cache.get('iyf-keys')
-    if (!keys) { // 修复: keys 丢失时重新获取
-        await updateKeys()
-        keys = $cache.get('iyf-keys')
-    }
-    const publicKey = JSON.parse(keys).publicKey
+    const keys = await ensureKeys()
+    const publicKey = keys.publicKey
     let cards = []
     let { id, page = 1 } = ext
 
@@ -90,7 +91,9 @@ async function getCards(ext) {
             lastErr = 'empty data'
         } catch (e) { lastErr = e }
     }
-    if (list === null) throw lastErr
+    if (list === null) {
+        return jsonify({ list: [] })
+    }
 
     list.forEach((e) => {
         cards.push({
@@ -111,7 +114,8 @@ async function getCards(ext) {
 
 async function getTracks(ext) {
     ext = argsify(ext)
-    const publicKey = JSON.parse($cache.get('iyf-keys')).publicKey
+    const keys = await ensureKeys()
+    const publicKey = keys.publicKey
     let tracks = []
     let key = ext.key
 
@@ -156,7 +160,8 @@ async function getTracks(ext) {
 
 async function getPlayinfo(ext) {
     ext = argsify(ext)
-    const publicKey = JSON.parse($cache.get('iyf-keys')).publicKey
+    const keys = await ensureKeys()
+    const publicKey = keys.publicKey
     let key = ext.key
 
     // 修复: host 自动降级
@@ -227,6 +232,21 @@ async function search(ext) {
     return jsonify({
         list: cards,
     })
+}
+
+async function ensureKeys() {
+    // 修复: XPTV $cache 可能不跨调用共享, 每次取 keys 校验, 缺失/无效则重拉
+    try {
+        const cached = $cache.get('iyf-keys')
+        if (cached) {
+            const parsed = JSON.parse(cached)
+            if (parsed && parsed.publicKey) return parsed
+        }
+    } catch (e) {}
+    await updateKeys()
+    const fresh = $cache.get('iyf-keys')
+    if (!fresh) throw new Error('iyf-keys unavailable')
+    return JSON.parse(fresh)
 }
 
 async function updateKeys() {
