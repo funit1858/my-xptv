@@ -54,46 +54,36 @@ let appConfig = {
 }
 
 async function getConfig() {
-    // 修复: getConfig 决不因 keys 获取失败而抛错 (否则 XPTV 无法显示该站)
     try {
         await updateKeys()
-    } catch (e) {
-        // keys 拿不到也不影响站点显示, 延迟到 getCards 再取
-    }
+    } catch (e) {}
     return jsonify(appConfig)
 }
 
 async function getCards(ext) {
     ext = argsify(ext)
-    const keys = await ensureKeys()
-    const publicKey = keys.publicKey
+    let keys = $cache.get('iyf-keys')
+    if (!keys) {
+        try { await updateKeys() } catch (e) {}
+        keys = $cache.get('iyf-keys')
+    }
+    if (!keys) return jsonify({ list: [] })
+    const publicKey = JSON.parse(keys).publicKey
     let cards = []
     let { id, page = 1 } = ext
 
-    // 修复: host 自动降级 (m10.iyf.tv 被 CDN 拦截时用 rankv21.iyf.tv)
-    const hosts = ['https://m10.iyf.tv', 'https://rankv21.iyf.tv']
-    let list = null
-    let lastErr = null
-    for (const host of hosts) {
-        try {
-            let url = `${host}/api/list/Search?cinema=1&page=${page}&size=36&orderby=0&desc=1&cid=0,1,${id}&isserial=-1&isIndex=-1&isfree=-1`
-            let params = url.split('?')[1]
-            url += `&vv=${getSignature(params)}&pub=${publicKey}`
+    let url = `${appConfig.site}/api/list/Search?cinema=1&page=${page}&size=36&orderby=0&desc=1&cid=0,1,${id}&isserial=-1&isIndex=-1&isfree=-1`
+    let params = url.split('?')[1]
+    url += `&vv=${getSignature(params)}&pub=${publicKey}`
 
-            const { data } = await $fetch.get(url, {
-                headers: { 'User-Agent': UA },
-            })
-            const parsed = argsify(data)
-            if (parsed && parsed.data && parsed.data.info && parsed.data.info[0] && parsed.data.info[0].result) {
-                list = parsed.data.info[0].result
-                break
-            }
-            lastErr = 'empty data'
-        } catch (e) { lastErr = e }
-    }
-    if (list === null) {
-        return jsonify({ list: [] })
-    }
+    const { data } = await $fetch.get(url, {
+        headers: {
+            'User-Agent': UA,
+        },
+    })
+    let list = null
+    try { list = argsify(data).data.info[0].result } catch (e) { list = [] }
+    if (!list || !list.length) return jsonify({ list: [] })
 
     list.forEach((e) => {
         cards.push({
@@ -114,28 +104,28 @@ async function getCards(ext) {
 
 async function getTracks(ext) {
     ext = argsify(ext)
-    const keys = await ensureKeys()
-    const publicKey = keys.publicKey
+    let keys = $cache.get('iyf-keys')
+    if (!keys) {
+        try { await updateKeys() } catch (e) {}
+        keys = $cache.get('iyf-keys')
+    }
+    if (!keys) return jsonify({ list: [] })
+    const publicKey = JSON.parse(keys).publicKey
     let tracks = []
     let key = ext.key
 
-    // 修复: host 自动降级
-    const hosts = ['https://m10.iyf.tv', 'https://rankv21.iyf.tv']
-    let data = null
-    let lastErr = null
-    for (const host of hosts) {
-        try {
-            let url = `${host}/v3/video/languagesplaylist?cinema=1&vid=${key}&lsk=1&taxis=0&cid=0,1,4,133`
-            let params = url.split('?')[1]
-            url += `&vv=${getSignature(params)}&pub=${publicKey}`
-            const r = await $fetch.get(url, { headers: { 'User-Agent': UA } })
-            if (r.statusCode !== 403 && r.data && !r.data.includes('<html')) { data = r.data; break }
-            lastErr = 'blocked ' + host
-        } catch (e) { lastErr = e }
-    }
-    if (data === null) throw lastErr
+    let url = `${appConfig.site}/v3/video/languagesplaylist?cinema=1&vid=${key}&lsk=1&taxis=0&cid=0,1,4,133`
+    let params = url.split('?')[1]
+    url += `&vv=${getSignature(params)}&pub=${publicKey}`
 
-    let playlist = argsify(data).data.info[0].playList
+    const { data } = await $fetch.get(url, {
+        headers: {
+            'User-Agent': UA,
+        },
+    })
+
+    let playlist = []
+    try { playlist = argsify(data).data.info[0].playList || [] } catch (e) {}
     playlist.forEach((e) => {
         const name = e.name
         const key = e.key
@@ -160,36 +150,26 @@ async function getTracks(ext) {
 
 async function getPlayinfo(ext) {
     ext = argsify(ext)
-    const keys = await ensureKeys()
-    const publicKey = keys.publicKey
-    let key = ext.key
-
-    // 修复: host 自动降级
-    const hosts = ['https://m10.iyf.tv', 'https://rankv21.iyf.tv']
-    let data = null
-    let lastErr = null
-    for (const host of hosts) {
-        try {
-            let url = `${host}/v3/video/play?cinema=1&id=${key}&a=0&lang=none&usersign=1&region=GL.&device=1&isMasterSupport=1`
-            let params = url.split('?')[1]
-            url += `&vv=${getSignature(params)}&pub=${publicKey}`
-            const r = await $fetch.get(url, { headers: { 'User-Agent': UA } })
-            if (r.statusCode !== 403 && r.data && !r.data.includes('<html')) {
-                const parsed = argsify(r.data)
-                // 修复: 校验 flvPathList 非空才采用 (rankv21 可能返回空 info)
-                if (parsed && parsed.data && parsed.data.info && parsed.data.info[0] && parsed.data.info[0].flvPathList && parsed.data.info[0].flvPathList.length > 0) {
-                    data = r.data
-                    break
-                }
-                lastErr = 'empty flv ' + host
-            } else {
-                lastErr = 'blocked ' + host
-            }
-        } catch (e) { lastErr = e }
+    let keys = $cache.get('iyf-keys')
+    if (!keys) {
+        try { await updateKeys() } catch (e) {}
+        keys = $cache.get('iyf-keys')
     }
-    if (data === null) throw lastErr
+    if (!keys) return jsonify({ urls: [], headers: [] })
+    const publicKey = JSON.parse(keys).publicKey
+    let key = ext.key
+    let url = `${appConfig.site}/v3/video/play?cinema=1&id=${key}&a=0&lang=none&usersign=1&region=GL.&device=1&isMasterSupport=1`
+    let params = url.split('?')[1]
+    url += `&vv=${getSignature(params)}&pub=${publicKey}`
 
-    let paths = argsify(data).data.info[0].flvPathList
+    const { data } = await $fetch.get(url, {
+        headers: {
+            'User-Agent': UA,
+        },
+    })
+
+    let paths = []
+    try { paths = argsify(data).data.info[0].flvPathList || [] } catch (e) {}
     let playUrl = ''
     paths.forEach(async (e) => {
         if (e.isHls) {
@@ -234,21 +214,6 @@ async function search(ext) {
     })
 }
 
-async function ensureKeys() {
-    // 修复: XPTV $cache 可能不跨调用共享, 每次取 keys 校验, 缺失/无效则重拉
-    try {
-        const cached = $cache.get('iyf-keys')
-        if (cached) {
-            const parsed = JSON.parse(cached)
-            if (parsed && parsed.publicKey) return parsed
-        }
-    } catch (e) {}
-    await updateKeys()
-    const fresh = $cache.get('iyf-keys')
-    if (!fresh) throw new Error('iyf-keys unavailable')
-    return JSON.parse(fresh)
-}
-
 async function updateKeys() {
     let baseUrl = 'https://www.iyf.tv'
     let { data } = await $fetch.get(baseUrl, {
@@ -256,21 +221,22 @@ async function updateKeys() {
             'User-Agent': UA,
         },
     })
-    // 兼容修复：括号配对提取 injectJson 完整对象（原逻辑对行尾 }; 与多语句行失效）
-    const mStart = data.indexOf('var injectJson =')
-    if (mStart < 0) throw new Error('injectJson not found')
-    const objStart = data.indexOf('{', mStart)
-    let depth = 0, i = objStart
-    for (; i < data.length; i++) {
-        if (data[i] === '{') depth++
-        else if (data[i] === '}') { depth--; if (depth === 0) break }
-    }
-    const jsonStr = data.slice(objStart, i + 1)
-    const json = JSON.parse(jsonStr)
-    const publicKey = json['config'][0]['pConfig']['publicKey']
-    const privateKey = json['config'][0]['pConfig']['privateKey']
-    const keys = { publicKey, privateKey }
-    $cache.set('iyf-keys', JSON.stringify(keys, null, 2))
+    const $ = cheerio.load(data)
+    let script = $('script:contains(injectJson)').text()
+    script.split('\n').forEach((e) => {
+        if (e.includes('injectJson')) {
+            let json = JSON.parse(e.replace('var injectJson =', '').replace(';', ''))
+            let publicKey = json['config'][0]['pConfig']['publicKey']
+            let privateKey = json['config'][0]['pConfig']['privateKey']
+            let keys = {
+                publicKey: publicKey,
+                privateKey: privateKey,
+            }
+            const jsonData = JSON.stringify(keys, null, 2)
+
+            $cache.set('iyf-keys', jsonData)
+        }
+    })
 }
 
 function getSignature(query) {
