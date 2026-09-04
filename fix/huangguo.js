@@ -1,3 +1,4 @@
+const CryptoJS = createCryptoJS()
 // 黄果短剧 huangguoai.com
 // HTML 刮削源：首頁/分類/搜尋皆為 .hg-card-grid > .hg-drama-card 卡片；
 // 排行榜為 .hg-rank-list > .hg-rank-item；詳情頁 .hg-web-detail__ep-grid 給集數；
@@ -78,8 +79,10 @@ function fix(u) {
     return u
 }
 
-// 图片解密代理: 黄果封面为 AES-128 加密字节, XPTV 端无法解密
-// 通过本机代理 (192.168.1.100:8765) 解密后返回明文 JPEG
+// 黄果封面为 AES-128-CBC 加密字节 (key/iv = UTF-8 字符串)。
+// XPTV 的 $fetch 通常无法返回原始二进制, 因此 vod_pic 这里采用解密代理方案:
+//   本地代理 (192.168.1.100:8765) 下载 >> AES 解密 >> 返回明文 JPEG。
+// 若代理不可达, 回退原始 URL (图片可能无法显示)。
 const IMG_PROXY = 'http://192.168.1.100:8765/img?u='
 
 function imgSrc(u) {
@@ -88,7 +91,6 @@ function imgSrc(u) {
     if (u.indexOf('http') === 0 && u.indexOf('?') !== -1) {
         u = u.replace(/\?.*/, '')
     }
-    // 走解密代理
     if (u.indexOf('http') === 0) {
         return IMG_PROXY + encodeURIComponent(u)
     }
