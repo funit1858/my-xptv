@@ -6,7 +6,7 @@ const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 let appConfig = {
     ver: 1,
     title: '愛壹帆',
-    site: 'https://m10.iyf.tv',
+    site: 'https://m10.yfsp.tv',
     tabs: [
         {
             name: '电影',
@@ -215,7 +215,7 @@ async function search(ext) {
 }
 
 async function updateKeys() {
-    let baseUrl = 'https://www.iyf.tv'
+    let baseUrl = 'https://www.yfsp.tv'
     let { data } = await $fetch.get(baseUrl, {
         headers: {
             'User-Agent': UA,
