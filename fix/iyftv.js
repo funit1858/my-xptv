@@ -61,20 +61,36 @@ async function getConfig() {
 async function getCards(ext) {
     ext = argsify(ext)
     let keys = $cache.get('iyf-keys')
+    if (!keys) { // 修复: keys 丢失时重新获取
+        await updateKeys()
+        keys = $cache.get('iyf-keys')
+    }
     const publicKey = JSON.parse(keys).publicKey
     let cards = []
     let { id, page = 1 } = ext
 
-    let url = `${appConfig.site}/api/list/Search?cinema=1&page=${page}&size=36&orderby=0&desc=1&cid=0,1,${id}&isserial=-1&isIndex=-1&isfree=-1`
-    let params = url.split('?')[1]
-    url += `&vv=${getSignature(params)}&pub=${publicKey}`
+    // 修复: host 自动降级 (m10.iyf.tv 被 CDN 拦截时用 rankv21.iyf.tv)
+    const hosts = ['https://m10.iyf.tv', 'https://rankv21.iyf.tv']
+    let list = null
+    let lastErr = null
+    for (const host of hosts) {
+        try {
+            let url = `${host}/api/list/Search?cinema=1&page=${page}&size=36&orderby=0&desc=1&cid=0,1,${id}&isserial=-1&isIndex=-1&isfree=-1`
+            let params = url.split('?')[1]
+            url += `&vv=${getSignature(params)}&pub=${publicKey}`
 
-    const { data } = await $fetch.get(url, {
-        headers: {
-            'User-Agent': UA,
-        },
-    })
-    let list = argsify(data).data.info[0].result
+            const { data } = await $fetch.get(url, {
+                headers: { 'User-Agent': UA },
+            })
+            const parsed = argsify(data)
+            if (parsed && parsed.data && parsed.data.info && parsed.data.info[0] && parsed.data.info[0].result) {
+                list = parsed.data.info[0].result
+                break
+            }
+            lastErr = 'empty data'
+        } catch (e) { lastErr = e }
+    }
+    if (list === null) throw lastErr
 
     list.forEach((e) => {
         cards.push({
@@ -99,15 +115,21 @@ async function getTracks(ext) {
     let tracks = []
     let key = ext.key
 
-    let url = `${appConfig.site}/v3/video/languagesplaylist?cinema=1&vid=${key}&lsk=1&taxis=0&cid=0,1,4,133`
-    let params = url.split('?')[1]
-    url += `&vv=${getSignature(params)}&pub=${publicKey}`
-
-    const { data } = await $fetch.get(url, {
-        headers: {
-            'User-Agent': UA,
-        },
-    })
+    // 修复: host 自动降级
+    const hosts = ['https://m10.iyf.tv', 'https://rankv21.iyf.tv']
+    let data = null
+    let lastErr = null
+    for (const host of hosts) {
+        try {
+            let url = `${host}/v3/video/languagesplaylist?cinema=1&vid=${key}&lsk=1&taxis=0&cid=0,1,4,133`
+            let params = url.split('?')[1]
+            url += `&vv=${getSignature(params)}&pub=${publicKey}`
+            const r = await $fetch.get(url, { headers: { 'User-Agent': UA } })
+            if (r.statusCode !== 403 && r.data && !r.data.includes('<html')) { data = r.data; break }
+            lastErr = 'blocked ' + host
+        } catch (e) { lastErr = e }
+    }
+    if (data === null) throw lastErr
 
     let playlist = argsify(data).data.info[0].playList
     playlist.forEach((e) => {
@@ -136,15 +158,31 @@ async function getPlayinfo(ext) {
     ext = argsify(ext)
     const publicKey = JSON.parse($cache.get('iyf-keys')).publicKey
     let key = ext.key
-    let url = `${appConfig.site}/v3/video/play?cinema=1&id=${key}&a=0&lang=none&usersign=1&region=GL.&device=1&isMasterSupport=1`
-    let params = url.split('?')[1]
-    url += `&vv=${getSignature(params)}&pub=${publicKey}`
 
-    const { data } = await $fetch.get(url, {
-        headers: {
-            'User-Agent': UA,
-        },
-    })
+    // 修复: host 自动降级
+    const hosts = ['https://m10.iyf.tv', 'https://rankv21.iyf.tv']
+    let data = null
+    let lastErr = null
+    for (const host of hosts) {
+        try {
+            let url = `${host}/v3/video/play?cinema=1&id=${key}&a=0&lang=none&usersign=1&region=GL.&device=1&isMasterSupport=1`
+            let params = url.split('?')[1]
+            url += `&vv=${getSignature(params)}&pub=${publicKey}`
+            const r = await $fetch.get(url, { headers: { 'User-Agent': UA } })
+            if (r.statusCode !== 403 && r.data && !r.data.includes('<html')) {
+                const parsed = argsify(r.data)
+                // 修复: 校验 flvPathList 非空才采用 (rankv21 可能返回空 info)
+                if (parsed && parsed.data && parsed.data.info && parsed.data.info[0] && parsed.data.info[0].flvPathList && parsed.data.info[0].flvPathList.length > 0) {
+                    data = r.data
+                    break
+                }
+                lastErr = 'empty flv ' + host
+            } else {
+                lastErr = 'blocked ' + host
+            }
+        } catch (e) { lastErr = e }
+    }
+    if (data === null) throw lastErr
 
     let paths = argsify(data).data.info[0].flvPathList
     let playUrl = ''
