@@ -1,0 +1,55 @@
+{
+  "name": "XPTV修复源 - 2026-09-04",
+  "sites": [
+    {
+      "key": "iyftv_fix",
+      "name": "愛壹帆 (修复版)",
+      "type": 3,
+      "api": "csp_iyftv",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": "https://raw.githubusercontent.com/funit1858/my-xptv/main/fix/iyftv.js"
+    },
+    {
+      "key": "anime1_fix",
+      "name": "anime1 (修复版, anime1.one)",
+      "type": 3,
+      "api": "csp_anime1",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": "https://raw.githubusercontent.com/funit1858/my-xptv/main/fix/anime1.js"
+    },
+    {
+      "key": "91jav_fix",
+      "name": "91Jav (修复版, 91jav1)",
+      "type": 3,
+      "api": "csp_91jav",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": "https://raw.githubusercontent.com/funit1858/my-xptv/main/fix/91jav.js"
+    },
+    {
+      "key": "rou_fix",
+      "name": "肉视频 (修复版)",
+      "type": 3,
+      "api": "csp_rou",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": "https://raw.githubusercontent.com/funit1858/my-xptv/main/fix/rou.js"
+    },
+    {
+      "key": "avtoday_fix",
+      "name": "AVToday (修复版)",
+      "type": 3,
+      "api": "csp_avtoday",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": "https://raw.githubusercontent.com/funit1858/my-xptv/main/fix/avtoday.js"
+    }
+  ]
+}
