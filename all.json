@@ -149,10 +149,10 @@
       "key": "site_20"
     },
     {
-      "name": "黃果短劇",
+      "name": "黃果短劇 (图片解密)",
       "type": 3,
       "api": "csp_huangguo",
-      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/Yswag/xptv-extensions/refs/heads/main/js/huangguo.js",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/funit1858/my-xptv/main/fix/huangguo.js",
       "key": "site_21"
     },
     {
