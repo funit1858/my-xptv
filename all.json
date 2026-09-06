@@ -12,6 +12,16 @@
       "ext": "https://raw.githubusercontent.com/funit1858/my-xptv/main/fix/libvio-cam.js"
     },
     {
+      "key": "javranking",
+      "name": "JavRanking (榜单+预览)",
+      "type": 3,
+      "api": "csp_javranking",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "ext": "https://raw.githubusercontent.com/funit1858/my-xptv/main/fix/javranking.js"
+    },
+    {
       "name": "影视天堂",
       "type": 3,
       "api": "csp_ystt",
