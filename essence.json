@@ -1,0 +1,183 @@
+{
+  "name": "XPTV精华源 - 实证可播 (2026-09-06)",
+  "sites": [
+    {
+      "key": "ess_0",
+      "name": "LIBVIO影视 (libvio.cam)",
+      "type": 3,
+      "api": "csp_libvio",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": "https://raw.githubusercontent.com/funit1858/my-xptv/main/fix/libvio-cam.js"
+    },
+    {
+      "name": "影视天堂",
+      "type": 3,
+      "api": "csp_ystt",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/fangkuia/XPTV/refs/heads/main/js/ystt.js",
+      "key": "ess_1"
+    },
+    {
+      "name": "独播库",
+      "type": 3,
+      "api": "csp_duboku",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/fangkuia/XPTV/refs/heads/main/js/duboku.js",
+      "key": "ess_2"
+    },
+    {
+      "name": "ppnix",
+      "type": 3,
+      "api": "csp_ppnix",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/Yswag/xptv-extensions/refs/heads/main/js/ppnix.js",
+      "key": "ess_3"
+    },
+    {
+      "name": "愛壹帆 (修复版)",
+      "type": 3,
+      "api": "csp_iyftv",
+      "ext": "https://raw.githubusercontent.com/funit1858/my-xptv/main/fix/iyftv.js",
+      "key": "ess_4"
+    },
+    {
+      "name": "欧乐🪜",
+      "type": 3,
+      "api": "csp_Olevod",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/fangkuia/XPTV/refs/heads/main/js/ole.js",
+      "key": "ess_5"
+    },
+    {
+      "name": "永樂視頻",
+      "type": 3,
+      "api": "csp_ylys",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/Yswag/xptv-extensions/refs/heads/main/js/ylys.js",
+      "key": "ess_6"
+    },
+    {
+      "name": "荐片",
+      "type": 3,
+      "api": "csp_jianpian",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/Yswag/xptv-extensions/refs/heads/main/js/jianpian.js",
+      "key": "ess_7"
+    },
+    {
+      "name": "金牌影院",
+      "type": 3,
+      "api": "csp_jpyy",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/Yswag/xptv-extensions/main/js/jpyy.js",
+      "key": "ess_8"
+    },
+    {
+      "name": "星芽短劇",
+      "type": 3,
+      "api": "csp_xingya",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/Yswag/xptv-extensions/main/js/xingya.js",
+      "key": "ess_9"
+    },
+    {
+      "name": "河馬短劇",
+      "type": 3,
+      "api": "csp_kuaikaw",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/Yswag/xptv-extensions/refs/heads/main/js/kuaikaw.js",
+      "key": "ess_10"
+    },
+    {
+      "name": "哔滴影视",
+      "type": 3,
+      "api": "csp_bde4",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/fangkuia/XPTV/refs/heads/main/js/bdys.js",
+      "key": "ess_11"
+    },
+    {
+      "name": "anime1 (修复版)",
+      "type": 3,
+      "api": "csp_anime1",
+      "ext": "https://raw.githubusercontent.com/funit1858/my-xptv/main/fix/anime1.js",
+      "key": "ess_12"
+    },
+    {
+      "name": "jable",
+      "type": 3,
+      "api": "csp_jable",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/Yswag/xptv-extensions/main/js/jable.js",
+      "key": "ess_13"
+    },
+    {
+      "name": "MISSAV",
+      "type": 3,
+      "api": "csp_miss",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/fangkuia/XPTV/refs/heads/main/js/missav.js",
+      "key": "ess_14"
+    },
+    {
+      "name": "麻豆社",
+      "type": 3,
+      "api": "csp_madou",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/Yswag/xptv-extensions/main/js/madou.js",
+      "key": "ess_15"
+    },
+    {
+      "name": "玩偶姐姐",
+      "type": 3,
+      "api": "csp_hkdoll",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/Yswag/xptv-extensions/main/js/hkdoll.js",
+      "key": "ess_16"
+    },
+    {
+      "name": "Pornhub",
+      "type": 3,
+      "api": "csp_pornhub",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/Yswag/xptv-extensions/main/js/pornhub.js",
+      "key": "ess_17"
+    },
+    {
+      "name": "AVDB",
+      "type": 3,
+      "api": "csp_avdb",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/Yswag/xptv-extensions/main/js/avdb.js",
+      "key": "ess_18"
+    },
+    {
+      "name": "Taiav",
+      "type": 3,
+      "api": "csp_Taiav",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/fangkuia/XPTV/refs/heads/main/js/taiav.js",
+      "key": "ess_19"
+    },
+    {
+      "name": "hohoj",
+      "type": 3,
+      "api": "csp_hohoj",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/Yswag/xptv-extensions/main/js/hohoj.js",
+      "key": "ess_20"
+    },
+    {
+      "name": "pppHub",
+      "type": 3,
+      "api": "csp_ppron",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/fangkuia/XPTV/refs/heads/main/js/ppp.js",
+      "key": "ess_21"
+    },
+    {
+      "name": "黃果短劇 (图片解密)",
+      "type": 3,
+      "api": "csp_huangguo",
+      "ext": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/funit1858/my-xptv/main/fix/huangguo.js",
+      "key": "ess_22"
+    },
+    {
+      "name": "91jav (無海報) (修复版)",
+      "type": 3,
+      "api": "csp_91jav",
+      "ext": "https://raw.githubusercontent.com/funit1858/my-xptv/main/fix/91jav.js",
+      "key": "ess_23"
+    },
+    {
+      "name": "肉视频 (修复版)",
+      "type": 3,
+      "api": "csp_rou",
+      "ext": "https://raw.githubusercontent.com/funit1858/my-xptv/main/fix/rou.js",
+      "key": "ess_24"
+    }
+  ]
+}
