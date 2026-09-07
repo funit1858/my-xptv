@@ -71,13 +71,15 @@ async function getCards(ext) {
 
     const $ = cheerio.load(data)
 
-    $('.grid.grid-cols-2.mb-6 > div').each((_, element) => {
-        if ($(element).find('.relative').length == 0) return
-        const href = $(element).find('.relative a').attr('href')
-        const title = $(element).find('img:last').attr('alt')
-        const cover = $(element).find('img').attr('src')
-        const subTitle = $(element).find('.relative a > div:eq(1)').text()
-        const hdinfo = $(element).find('.relative a > div:first').text()
+    $('a[href*="/v/"]').each((_, element) => {
+        // 新版卡片: <a href="/v/xxx" class="group block min-w-0"> <div class="relative"> <img>
+        const href = $(element).attr('href')
+        if (!href || !href.startsWith('/v/')) return
+        const cover = $(element).find('img').first().attr('src') || $(element).find('img').first().attr('data-src') || ''
+        const title = $(element).find('img').last().attr('alt') || $(element).attr('title') || ''
+        const meta = $(element).find('div').text().trim()
+        const subTitle = meta.slice(0, 30)
+        const hdinfo = ''
         cards.push({
             vod_id: href,
             vod_name: title,
@@ -205,13 +207,15 @@ async function search(ext) {
 
     const $ = cheerio.load(data)
 
-    $('.grid.grid-cols-2.mb-6 > div').each((_, element) => {
-        if ($(element).find('.relative').length == 0) return
-        const href = $(element).find('.relative a').attr('href')
-        const title = $(element).find('img:last').attr('alt')
-        const cover = $(element).find('img').attr('src')
-        const subTitle = $(element).find('.relative a > div:eq(1)').text()
-        const hdinfo = $(element).find('.relative a > div:first').text()
+    $('a[href*="/v/"]').each((_, element) => {
+        // 新版卡片: <a href="/v/xxx" class="group block min-w-0"> <div class="relative"> <img>
+        const href = $(element).attr('href')
+        if (!href || !href.startsWith('/v/')) return
+        const cover = $(element).find('img').first().attr('src') || $(element).find('img').first().attr('data-src') || ''
+        const title = $(element).find('img').last().attr('alt') || $(element).attr('title') || ''
+        const meta = $(element).find('div').text().trim()
+        const subTitle = meta.slice(0, 30)
+        const hdinfo = ''
         cards.push({
             vod_id: href,
             vod_name: title,
